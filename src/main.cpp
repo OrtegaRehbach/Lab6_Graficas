@@ -66,7 +66,7 @@ void render(std::vector<glm::vec3> vertexBufferObject) {
         Vertex transformedVertex = vertexShader(vertex, uniforms);
         transformedVertices.push_back(transformedVertex);
     }
-    // exit(1);
+
     // 2. Primitive Assembly
     std::vector<std::vector<Vertex>> triangles = primitiveAssembly(transformedVertices);
 
