@@ -14,15 +14,12 @@ Vertex vertexShader(const Vertex& vertex, const Uniforms& uniforms) {
     // Transform the normal
     glm::vec3 transformedNormal = glm::mat3(uniforms.model) * vertex.normal;
     transformedNormal = glm::normalize(transformedNormal);
-    glm::vec3 normal = transformedNormal;
 
-    // std::cout << "Transformed Normal(" << normal.x << ", " << normal.y << ", " << normal.z << ")" << std::endl;
-   
     // Return the transformed vertex
     return Vertex{
-        glm::vec3(screenVertex),
-        transformedNormal
-        // vertex.normal
+        glm::vec3(screenVertex),    // Transformed position
+        transformedNormal,          // Transformed normal
+        vertex.position             // Original position
     };
 }
 
