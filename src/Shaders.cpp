@@ -24,17 +24,17 @@ Vertex vertexShader(const Vertex& vertex, const Uniforms& uniforms) {
 }
 
 Fragment fragmentShader(const Fragment& fragment) {
-    // Example: Assign a constant color to each fragment
     glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
-    Color fragmentColor = Color(220, 220, 220);
+    Color fragmentColor = Color(120, 0, 220);
 
     float intensity = fragment.intensity;
-    
+
+    float xPos = fragment.originalPosition.x;
+    float yPos = fragment.originalPosition.y;
+
+    fragmentColor = fragmentColor + Color(0, 0, 255) * 1.2f * std::abs(std::sin(6 * (3.1416f * yPos) + 0.5f) * std::sin(9 * 3.1416f * yPos + 20 * std::pow(yPos, 3)));
+
     Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor * intensity);
-
-    // You can modify this function to implement more complex shading
-    // based on the fragment's attributes (e.g., depth, interpolated normals, texture coordinates, etc.)
     
-
     return shadedFragment;
 }
