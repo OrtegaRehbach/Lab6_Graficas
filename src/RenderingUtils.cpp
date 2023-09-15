@@ -1,7 +1,8 @@
 #include "RenderingUtils.h"
 
 // glm::vec3 L(0.0f, 0.0f, 1.0f);   // Straight light
-glm::vec3 L(0.5f, -1.0f, 1.0f);  // Diagonal light
+// glm::vec3 L(0.5f, -1.0f, 1.0f);  // Diagonal light
+glm::vec3 L(1.0f, 0.0f, 1.0f);  // Horizontal light (right)
 
 void drawPoint(SDL_Renderer* renderer, float x_position, float y_position, const Color& color) {
     // Get Screen dimensions for coordinate adjustment
