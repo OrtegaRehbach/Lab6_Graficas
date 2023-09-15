@@ -13,7 +13,10 @@ struct Vertex {
 
     // Constructor
     Vertex(const glm::vec3& pos, const glm::vec3& norm)
-        : position(pos), normal(norm), originalPos(this->position) {}
+    : position(pos), normal(norm), originalPos(this->position) {}
+
+    Vertex(const glm::vec3& pos, const glm::vec3& norm, const glm::vec3& ogPos)
+    : position(pos), normal(norm), originalPos(ogPos) {}
 
     // Overload the << operator for printing a Vertex
     friend std::ostream& operator<<(std::ostream& os, const Vertex& vertex) {
