@@ -32,7 +32,7 @@ Fragment fragmentShader(const Fragment& fragment) {
     float xPos = fragment.originalPosition.x;
     float yPos = fragment.originalPosition.y;
 
-    fragmentColor = fragmentColor + Color(0, 0, 255) * 1.2f * std::abs(std::sin(6 * (3.1416f * yPos) + 0.5f) * std::sin(9 * 3.1416f * yPos + 20 * std::pow(yPos, 3)));
+    fragmentColor = fragmentColor + Color(0, 0, 255) * 1.2f * std::abs(std::sin(6 * (3.1416f * yPos) + 0.5f) * std::sin(9 * 3.1416f * yPos + 20 * std::pow(yPos, 3)) + 0.6f * std::sin(0.4f * 3.146f * xPos + 3));
 
     Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor * intensity);
     
