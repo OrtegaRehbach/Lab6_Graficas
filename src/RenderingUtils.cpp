@@ -112,12 +112,26 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
                 float intensity = glm::dot(normal, glm::normalize(L));
                 intensity = (intensity < 0) ? abs(intensity) : 0.0f;    // Truncate the value for normals facing opposite of L
 
+                // Interpolate world position
+                glm::vec3 worldPosition = a.position * u + b.position * v + c.position * w;
+
+                // Interpolate original position
+                glm::vec3 originalPosition = a.originalPos * u + b.originalPos * v + c.originalPos * w;
+
                 // Backface culling
                 if (intensity <= 0)
                 continue;
             
 
-                triangleFragments.push_back(Fragment(P, Color(), intensity));
+                triangleFragments.push_back(
+                    Fragment(
+                        P, 
+                        Color(), 
+                        intensity, 
+                        worldPosition, 
+                        originalPosition
+                    )
+                );
             }
         }
     }
