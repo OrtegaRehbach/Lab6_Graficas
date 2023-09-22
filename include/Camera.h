@@ -7,12 +7,14 @@ struct Camera {
     glm::vec3 targetPosition;
     glm::vec3 upVector;
     glm::vec3 rightVector;
+    glm::vec3 viewDirection;
 
     // Constructor to initialize camera properties
     Camera(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up)
         : cameraPosition(position), targetPosition(target), upVector(up) {
         // Calculate the initial right vector
         rightVector = glm::normalize(glm::cross(target - cameraPosition, upVector));
+        viewDirection = glm::normalize(targetPosition - cameraPosition);
     }
 
     // Function to rotate the camera horizontally (left or right)
