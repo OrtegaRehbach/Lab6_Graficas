@@ -58,7 +58,7 @@ void point(Fragment fragment) {
     }
 }
 
-void render(std::vector<glm::vec3> vertexBufferObject) {
+void render(std::vector<glm::vec3> vertexBufferObject, Camera camera) {
     // 1. Vertex Shader
     std::vector<Vertex> transformedVertices;
     for (int i = 0; i < vertexBufferObject.size(); i += 2) {
@@ -73,7 +73,7 @@ void render(std::vector<glm::vec3> vertexBufferObject) {
     // 3. Rasterization
     std::vector<Fragment> fragments;
     for (std::vector<Vertex> triangle : triangles) {
-        std::vector<Fragment> rasterizedTriangle = getTriangleFragments(triangle[0], triangle[1], triangle[2], SCREEN_WIDTH, SCREEN_HEIGHT);
+        std::vector<Fragment> rasterizedTriangle = getTriangleFragments(triangle[0], triangle[1], triangle[2], SCREEN_WIDTH, SCREEN_HEIGHT, camera);
 
         fragments.insert(
             fragments.end(),
@@ -111,6 +111,7 @@ int main() {
 
     float rotation = 0.0f;
     Uint32 frameStart, frameTime;
+    float orbitAngle = 0.0f;
 
     // Render loop
     bool quit = false;
@@ -147,14 +148,24 @@ int main() {
         clear();
 
         // Calculate matrixes for rendering
-        uniforms.model = createModelMatrix(glm::vec3(1.8), glm::vec3(0, 0, 0), rotation += 0.04f);
+        uniforms.model = createModelMatrix(glm::vec3(1.8), glm::vec3(0, 0, 0), rotation += 0.06f);
         uniforms.view = createViewMatrix(camera);
         uniforms.projection = createProjectionMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
         uniforms.viewport = createViewportMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         // Call render() function
-        render(VBO);
+        render(VBO, camera);
         
+        float orbitRadius = 1.5f;
+        float xPos = orbitRadius * std::cos(orbitAngle);
+        float zPos = orbitRadius * std::sin(orbitAngle);
+
+        uniforms.model = createModelMatrix(glm::vec3(0.4), glm::vec3(xPos, 0, zPos));
+
+        render(VBO, camera);
+
+        orbitAngle += 0.15f;
+
         // Present the framebuffer to the screen
         SDL_RenderPresent(renderer);
 
