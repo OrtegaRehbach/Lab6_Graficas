@@ -92,8 +92,10 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
     int maxY = static_cast<int>( std::floor( std::max(std::max(A.y, B.y), C.y) ) );
 
     // Check if bounding box is inside screen
-    if (!isInsideScreen(minX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) &&
-        !isInsideScreen(maxX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT))
+    if (!isInsideScreen(minX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) && // Lower left corner
+        !isInsideScreen(maxX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT) && // Upper right corner
+        !isInsideScreen(maxX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) && // Lower right corner
+        !isInsideScreen(minX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT))   // Upper left corner
     return triangleFragments;
 
     for (int y = minY; y <= maxY; y++) {
