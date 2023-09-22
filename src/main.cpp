@@ -42,15 +42,9 @@ void clear() {
     }
 }
 
-bool isInsideScreen(Fragment fragment) {
-    return (
-        fragment.x >= 0 && fragment.x < SCREEN_WIDTH &&
-        fragment.y > 0 && fragment.y <= SCREEN_HEIGHT
-    );
-}
-
 void point(Fragment fragment) {
-    if (isInsideScreen(fragment) && fragment.z < zbuffer[fragment.y][fragment.x]) {
+    if (isInsideScreen(fragment, SCREEN_WIDTH, SCREEN_HEIGHT) && 
+        fragment.z < zbuffer[fragment.y][fragment.x]) {
         // Draw the fragment on screen
         drawPoint(renderer, fragment.x, fragment.y, fragment.color);
         // Update the zbuffer for value for this position
