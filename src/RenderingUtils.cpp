@@ -231,6 +231,13 @@ glm::mat4 createViewportMatrix(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
     return viewport;
 }
 
+bool isInsideScreen(const Fragment& fragment, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    return (
+        fragment.x >= 0 && fragment.x < SCREEN_WIDTH &&
+        fragment.y > 0 && fragment.y <= SCREEN_HEIGHT
+    );
+}
+
 glm::vec3 barycentricCoordinates(const glm::vec3& P, const glm::vec3& A, const glm::vec3& B, const glm::vec3& C) {
     // float w =   ((B.y - C.y)*(P.x - C.x) + (C.x - B.x)*(P.y - C.y)) / 
     //             ((B.y - C.y)*(A.x - C.x) + (C.x - B.x)*(A.y - C.y));
