@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 #include <sstream>
+#include <functional>
 #include "ObjLoader.h"
 #include "Vertex.h"
 #include "Face.h"
@@ -19,6 +20,12 @@ std::array<std::array<float, SCREEN_WIDTH>, SCREEN_HEIGHT> zbuffer;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 Uniforms uniforms;
+
+// Define the type of function to store in activeShader
+using ShaderFunction = std::function<Fragment(const Fragment& fragment)>;
+
+// Global variable to store active shader
+ShaderFunction activeShader;
 
 
 bool init() {
@@ -78,7 +85,7 @@ void render(std::vector<glm::vec3> vertexBufferObject, Camera camera) {
     
     // 4. Fragment Shader
     for (Fragment fragment : fragments) {
-        Fragment transformedFragment = fragmentShader(fragment);
+        Fragment transformedFragment = activeShader(fragment);
         point(transformedFragment);
     }
 }
@@ -141,15 +148,21 @@ int main() {
         // Clear the buffer
         clear();
 
+        // Render big planet
+        
         // Calculate matrixes for rendering
-        uniforms.model = createModelMatrix(glm::vec3(1.8), glm::vec3(0, 0, 0), rotation += 0.06f);
+        uniforms.model = createModelMatrix(glm::vec3(1.5), glm::vec3(0, 0, 0), rotation += 0.06f);
         uniforms.view = createViewMatrix(camera);
         uniforms.projection = createProjectionMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
         uniforms.viewport = createViewportMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         // Call render() function
+        activeShader = fragmentShader;  // Set active shader to striped planet shader
         render(VBO, camera);    // Big planet
         
+        
+        // Render small planet
+
         // Orbiting values
         float orbitRadius = 1.5f;
         float xPos = orbitRadius * std::cos(orbitAngle);
@@ -158,6 +171,7 @@ int main() {
         // New model matrix for small planet
         uniforms.model = createModelMatrix(glm::vec3(0.4), glm::vec3(xPos, 0, zPos));
 
+        activeShader = testFragmentShader;  // Set active shader to test fragment shader
         render(VBO, camera);    // Small orbiting planet
 
         orbitAngle += 0.15f;    // Increase orbit angle
