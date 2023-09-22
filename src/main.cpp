@@ -185,6 +185,16 @@ int main() {
 
         orbitAngle += 0.15f;    // Increase orbit angle
 
+
+
+        // Render ship
+
+        glm::vec3 camerOffset = glm::vec3(0, 0.4, -2);
+        glm::mat4 shipRotationMatrix = glm::rotate(glm::mat4(1.0f), horizontalRotationSpeed, glm::vec3(0, 1, 0));
+        uniforms.model = createModelMatrix(glm::vec3(0.1), camera.targetPosition + camerOffset, 1.57) * shipRotationMatrix;
+
+        render(VBO_ship, camera);
+
         // Present the framebuffer to the screen
         SDL_RenderPresent(renderer);
 
