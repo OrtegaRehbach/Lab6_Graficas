@@ -90,6 +90,34 @@ void render(std::vector<glm::vec3> vertexBufferObject, Camera camera) {
     }
 }
 
+std::vector<Fragment> getStarFragments(int amount) {
+    std::vector<Fragment> starFragments;
+    for (int i = 0; i < amount; i++) {
+        int x = rand() % SCREEN_WIDTH;
+        int y = rand() % SCREEN_HEIGHT;
+        float z = 9999.0f;
+
+        Color starColor = Color();
+
+        Fragment starFragment = Fragment(
+            static_cast<float>(x),
+            static_cast<float>(y),
+            z,
+            starColor
+        );
+
+        starFragments.push_back(starFragment);
+    }
+    
+    return starFragments;
+}
+
+void drawStars(std::vector<Fragment> starFragments) {
+    for (Fragment star : starFragments) {
+        point(star);
+    }
+}
+
 int main() {
     // Initialize SDL
     if (!init()) { return 1; }
@@ -107,6 +135,8 @@ int main() {
     Camera camera = {glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)};
     const float cameraMovementSpeed = 0.1f;
     const float horizontalRotationSpeed = 0.02f;
+
+    std::vector<Fragment> starFragments = getStarFragments(100);
 
     std::vector<glm::vec3> VBO = setupVertexBufferObject(vertices, normals, faces);
 
@@ -155,6 +185,8 @@ int main() {
         uniforms.view = createViewMatrix(camera);
         uniforms.projection = createProjectionMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
         uniforms.viewport = createViewportMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        drawStars(starFragments);
 
         // Call render() function
         activeShader = fragmentShader;  // Set active shader to striped planet shader
