@@ -26,7 +26,7 @@ Vertex vertexShader(const Vertex& vertex, const Uniforms& uniforms) {
 Fragment fragmentShader(const Fragment& fragment) {
     // Example: Assign a constant color to each fragment
     glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
-    Color fragmentColor = Color(220, 220, 220);
+    Color fragmentColor = Color(120, 0, 220);
 
     float intensity = fragment.intensity;
 
