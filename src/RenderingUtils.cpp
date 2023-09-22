@@ -232,9 +232,13 @@ glm::mat4 createViewportMatrix(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
 }
 
 bool isInsideScreen(const Fragment& fragment, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    return isInsideScreen(fragment.x, fragment.y, SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
+bool isInsideScreen(int x, int y, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
     return (
-        fragment.x >= 0 && fragment.x < SCREEN_WIDTH &&
-        fragment.y > 0 && fragment.y <= SCREEN_HEIGHT
+        x >= 0 && x < SCREEN_WIDTH &&
+        y > 0 && y <= SCREEN_HEIGHT
     );
 }
 
