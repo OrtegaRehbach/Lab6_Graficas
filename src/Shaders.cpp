@@ -29,12 +29,24 @@ Fragment fragmentShader(const Fragment& fragment) {
     Color fragmentColor = Color(220, 220, 220);
 
     float intensity = fragment.intensity;
-    
-    Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor * intensity);
 
-    // You can modify this function to implement more complex shading
-    // based on the fragment's attributes (e.g., depth, interpolated normals, texture coordinates, etc.)
+    float xPos = fragment.originalPosition.x;
+    float yPos = fragment.originalPosition.y;
+
+    fragmentColor = fragmentColor + Color(0, 0, 255) * 1.2f * std::abs(std::sin(6 * (3.1416f * yPos) + 0.5f) * std::sin(9 * 3.1416f * yPos + 20 * std::pow(yPos, 3)) + 0.6f * std::sin(0.4f * 3.146f * xPos + 3));
+
+    Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor * intensity);
     
+    return shadedFragment;
+}
+
+Fragment testFragmentShader(const Fragment& fragment) {
+    glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
+    Color fragmentColor = Color(220, 220, 220);
+
+    float intensity = fragment.intensity;
+  
+    Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor * intensity);
 
     return shadedFragment;
 }

@@ -78,7 +78,7 @@ std::vector<Fragment> drawTriangle(const std::vector<Vertex>& triangle, const Co
     return drawTriangle(triangle[0].position, triangle[1].position, triangle[2].position, color);
 }
 
-std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const int SCREEN_WIDTH, const int SCREEN_HEIGHT) {
+std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const Camera& camera) {
     glm::vec3 A = a.position;
     glm::vec3 B = b.position;
     glm::vec3 C = c.position;
@@ -91,9 +91,13 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
     int maxX = static_cast<int>( std::floor( std::max(std::max(A.x, B.x), C.x) ) );
     int maxY = static_cast<int>( std::floor( std::max(std::max(A.y, B.y), C.y) ) );
 
+    // Check if bounding box is outside screen
+    if (!bBoxInsideScreen(minX, minY, maxX, maxY, SCREEN_WIDTH, SCREEN_WIDTH))
+    return triangleFragments;
+
     for (int y = minY; y <= maxY; y++) {
         for (int x = minX; x <= maxX; x++) {
-            if (x < 0 || y < 0 || y >= SCREEN_HEIGHT || x >= SCREEN_WIDTH)
+            if (!isInsideScreen(x, y, SCREEN_WIDTH, SCREEN_HEIGHT))
             continue;
 
             glm::vec3 P(x, y, 0);
@@ -108,20 +112,25 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
 
                 // Interpolate normal
                 glm::vec3 normal = glm::normalize(a.normal * u + b.normal * v + c.normal * w);
+
+                // View culling
+                bool inView = glm::dot(camera.viewDirection, normal) <= 0;
+                if (!inView)
+                continue;
                 
                 // Calculate intensity
                 float intensity = glm::dot(normal, glm::normalize(L));
                 intensity = (intensity < 0) ? abs(intensity) : 0.0f;    // Truncate the value for normals facing opposite of L
 
+                // Backface culling
+                if (!inView && intensity <= 0)
+                continue;
+
                 // Interpolate world position
                 glm::vec3 worldPosition = a.position * u + b.position * v + c.position * w;
 
                 // Interpolate original position
-                glm::vec3 originalPosition = a.originalPos * u + b.originalPos * v + c.originalPos * w;
-
-                // Backface culling
-                if (intensity <= 0)
-                continue;
+                glm::vec3 originalPosition = a.originalPos * u + b.originalPos * v + c.originalPos * w;                
             
 
                 triangleFragments.push_back(
@@ -223,6 +232,26 @@ glm::mat4 createViewportMatrix(int SCREEN_WIDTH, int SCREEN_HEIGHT) {
     viewport = glm::translate(viewport, glm::vec3(1.0f, 1.0f, 0.5f));
 
     return viewport;
+}
+
+bool isInsideScreen(const Fragment& fragment, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    return isInsideScreen(fragment.x, fragment.y, SCREEN_WIDTH, SCREEN_HEIGHT);
+}
+
+bool isInsideScreen(int x, int y, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    return (
+        x >= 0 && x < SCREEN_WIDTH &&
+        y > 0 && y <= SCREEN_HEIGHT
+    );
+}
+
+bool bBoxInsideScreen(int minX, int minY, int maxX, int maxY, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    return (
+        isInsideScreen(minX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) || // Lower left corner
+        isInsideScreen(maxX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT) || // Upper right corner
+        isInsideScreen(maxX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) || // Lower right corner
+        isInsideScreen(minX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT)    // Upper left corner
+    );
 }
 
 glm::vec3 barycentricCoordinates(const glm::vec3& P, const glm::vec3& A, const glm::vec3& B, const glm::vec3& C) {

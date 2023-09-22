@@ -3,6 +3,7 @@
 #include <vector>
 #include <array>
 #include <sstream>
+#include <functional>
 #include "ObjLoader.h"
 #include "Vertex.h"
 #include "Face.h"
@@ -19,6 +20,12 @@ std::array<std::array<float, SCREEN_WIDTH>, SCREEN_HEIGHT> zbuffer;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 Uniforms uniforms;
+
+// Define the type of function to store in activeShader
+using ShaderFunction = std::function<Fragment(const Fragment& fragment)>;
+
+// Global variable to store active shader
+ShaderFunction activeShader;
 
 
 bool init() {
@@ -42,15 +49,9 @@ void clear() {
     }
 }
 
-bool isInsideScreen(Fragment fragment) {
-    return (
-        fragment.x > 0 && fragment.x < SCREEN_WIDTH &&
-        fragment.y > 0 && fragment.y < SCREEN_HEIGHT
-    );
-}
-
 void point(Fragment fragment) {
-    if (isInsideScreen(fragment) && fragment.z < zbuffer[fragment.y][fragment.x]) {
+    if (isInsideScreen(fragment, SCREEN_WIDTH, SCREEN_HEIGHT) && 
+        fragment.z < zbuffer[fragment.y][fragment.x]) {
         // Draw the fragment on screen
         drawPoint(renderer, fragment.x, fragment.y, fragment.color);
         // Update the zbuffer for value for this position
@@ -58,7 +59,7 @@ void point(Fragment fragment) {
     }
 }
 
-void render(std::vector<glm::vec3> vertexBufferObject) {
+void render(std::vector<glm::vec3> vertexBufferObject, Camera camera) {
     // 1. Vertex Shader
     std::vector<Vertex> transformedVertices;
     for (int i = 0; i < vertexBufferObject.size(); i += 2) {
@@ -73,7 +74,7 @@ void render(std::vector<glm::vec3> vertexBufferObject) {
     // 3. Rasterization
     std::vector<Fragment> fragments;
     for (std::vector<Vertex> triangle : triangles) {
-        std::vector<Fragment> rasterizedTriangle = getTriangleFragments(triangle[0], triangle[1], triangle[2], SCREEN_WIDTH, SCREEN_HEIGHT);
+        std::vector<Fragment> rasterizedTriangle = getTriangleFragments(triangle[0], triangle[1], triangle[2], SCREEN_WIDTH, SCREEN_HEIGHT, camera);
 
         fragments.insert(
             fragments.end(),
@@ -84,7 +85,7 @@ void render(std::vector<glm::vec3> vertexBufferObject) {
     
     // 4. Fragment Shader
     for (Fragment fragment : fragments) {
-        Fragment transformedFragment = fragmentShader(fragment);
+        Fragment transformedFragment = activeShader(fragment);
         point(transformedFragment);
     }
 }
@@ -141,6 +142,7 @@ int main() {
 
     float rotation = 0.0f;
     Uint32 frameStart, frameTime;
+    float orbitAngle = 0.0f;
 
     // Render loop
     bool quit = false;
@@ -176,8 +178,10 @@ int main() {
         // Clear the buffer
         clear();
 
+        // Render big planet
+        
         // Calculate matrixes for rendering
-        uniforms.model = createModelMatrix(glm::vec3(1.8), glm::vec3(0, 0, 0), rotation += 0.04f);
+        uniforms.model = createModelMatrix(glm::vec3(1.5), glm::vec3(0, 0, 0), rotation += 0.06f);
         uniforms.view = createViewMatrix(camera);
         uniforms.projection = createProjectionMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
         uniforms.viewport = createViewportMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -185,8 +189,25 @@ int main() {
         drawStars(starFragments);
 
         // Call render() function
-        render(VBO);
+        activeShader = fragmentShader;  // Set active shader to striped planet shader
+        render(VBO, camera);    // Big planet
         
+        
+        // Render small planet
+
+        // Orbiting values
+        float orbitRadius = 1.5f;
+        float xPos = orbitRadius * std::cos(orbitAngle);
+        float zPos = orbitRadius * std::sin(orbitAngle);
+
+        // New model matrix for small planet
+        uniforms.model = createModelMatrix(glm::vec3(0.4), glm::vec3(xPos, 0, zPos));
+
+        activeShader = testFragmentShader;  // Set active shader to test fragment shader
+        render(VBO, camera);    // Small orbiting planet
+
+        orbitAngle += 0.15f;    // Increase orbit angle
+
         // Present the framebuffer to the screen
         SDL_RenderPresent(renderer);
 
