@@ -78,7 +78,7 @@ std::vector<Fragment> drawTriangle(const std::vector<Vertex>& triangle, const Co
     return drawTriangle(triangle[0].position, triangle[1].position, triangle[2].position, color);
 }
 
-std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const int SCREEN_WIDTH, const int SCREEN_HEIGHT) {
+std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const int SCREEN_WIDTH, const int SCREEN_HEIGHT, const Camera& camera) {
     glm::vec3 A = a.position;
     glm::vec3 B = b.position;
     glm::vec3 C = c.position;
@@ -108,6 +108,12 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
 
                 // Interpolate normal
                 glm::vec3 normal = glm::normalize(a.normal * u + b.normal * v + c.normal * w);
+
+                // View culling
+                bool inView = glm::dot(camera.viewDirection, normal) <= 0;
+                if (!inView) {
+                    continue;
+                }
                 
                 // Calculate intensity
                 float intensity = glm::dot(normal, glm::normalize(L));
@@ -120,7 +126,7 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
                 glm::vec3 originalPosition = a.originalPos * u + b.originalPos * v + c.originalPos * w;
 
                 // Backface culling
-                if (intensity <= 0)
+                if (!inView && intensity <= 0)
                 continue;
             
 
