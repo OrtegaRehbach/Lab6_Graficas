@@ -91,11 +91,8 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
     int maxX = static_cast<int>( std::floor( std::max(std::max(A.x, B.x), C.x) ) );
     int maxY = static_cast<int>( std::floor( std::max(std::max(A.y, B.y), C.y) ) );
 
-    // Check if bounding box is inside screen
-    if (!isInsideScreen(minX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) && // Lower left corner
-        !isInsideScreen(maxX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT) && // Upper right corner
-        !isInsideScreen(maxX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) && // Lower right corner
-        !isInsideScreen(minX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT))   // Upper left corner
+    // Check if bounding box is outside screen
+    if (!bBoxInsideScreen(minX, minY, maxX, maxY, SCREEN_WIDTH, SCREEN_WIDTH))
     return triangleFragments;
 
     for (int y = minY; y <= maxY; y++) {
@@ -245,6 +242,15 @@ bool isInsideScreen(int x, int y, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
     return (
         x >= 0 && x < SCREEN_WIDTH &&
         y > 0 && y <= SCREEN_HEIGHT
+    );
+}
+
+bool bBoxInsideScreen(int minX, int minY, int maxX, int maxY, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
+    return (
+        isInsideScreen(minX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) || // Lower left corner
+        isInsideScreen(maxX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT) || // Upper right corner
+        isInsideScreen(maxX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) || // Lower right corner
+        isInsideScreen(minX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT)    // Upper left corner
     );
 }
 
