@@ -104,11 +104,20 @@ int main() {
         loadOBJ("../models/sphere.obj", vertices, normals, faces);
     }
 
+    std::vector<glm::vec3> shipVertices;
+    std::vector<glm::vec3> shipNormals;
+    std::vector<Face> shipFaces;
+
+    if (loadModel) {
+        loadOBJ("../models/Lab3_Ship.obj", shipVertices, shipNormals, shipFaces);
+    }
+
     Camera camera = {glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)};
     const float cameraMovementSpeed = 0.1f;
     const float horizontalRotationSpeed = 0.02f;
 
     std::vector<glm::vec3> VBO = setupVertexBufferObject(vertices, normals, faces);
+    std::vector<glm::vec3> VBO_ship = setupVertexBufferObject(shipVertices, shipNormals, shipFaces);
 
     float rotation = 0.0f;
     Uint32 frameStart, frameTime;
