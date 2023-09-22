@@ -9,3 +9,4 @@
 Vertex vertexShader(const Vertex& vertex, const Uniforms& uniforms);
 Vertex vertexShader(const Vertex& vertex);
 Fragment fragmentShader(const Fragment& fragment);
+Fragment testFragmentShader(const Fragment& fragment);
