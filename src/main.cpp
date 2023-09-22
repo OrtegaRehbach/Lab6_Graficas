@@ -44,8 +44,8 @@ void clear() {
 
 bool isInsideScreen(Fragment fragment) {
     return (
-        fragment.x > 0 && fragment.x < SCREEN_WIDTH &&
-        fragment.y > 0 && fragment.y < SCREEN_HEIGHT
+        fragment.x >= 0 && fragment.x < SCREEN_WIDTH &&
+        fragment.y > 0 && fragment.y <= SCREEN_HEIGHT
     );
 }
 
