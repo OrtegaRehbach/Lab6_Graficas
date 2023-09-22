@@ -154,17 +154,19 @@ int main() {
         uniforms.viewport = createViewportMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         // Call render() function
-        render(VBO, camera);
+        render(VBO, camera);    // Big planet
         
+        // Orbiting values
         float orbitRadius = 1.5f;
         float xPos = orbitRadius * std::cos(orbitAngle);
         float zPos = orbitRadius * std::sin(orbitAngle);
 
+        // New model matrix for small planet
         uniforms.model = createModelMatrix(glm::vec3(0.4), glm::vec3(xPos, 0, zPos));
 
-        render(VBO, camera);
+        render(VBO, camera);    // Small orbiting planet
 
-        orbitAngle += 0.15f;
+        orbitAngle += 0.15f;    // Increase orbit angle
 
         // Present the framebuffer to the screen
         SDL_RenderPresent(renderer);
