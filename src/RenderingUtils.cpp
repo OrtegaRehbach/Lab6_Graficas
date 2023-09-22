@@ -91,9 +91,14 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
     int maxX = static_cast<int>( std::floor( std::max(std::max(A.x, B.x), C.x) ) );
     int maxY = static_cast<int>( std::floor( std::max(std::max(A.y, B.y), C.y) ) );
 
+    if (!isInsideScreen(minX, minY, SCREEN_WIDTH, SCREEN_HEIGHT) &&
+        !isInsideScreen(maxX, maxY, SCREEN_WIDTH, SCREEN_HEIGHT))
+    return triangleFragments;
+
     for (int y = minY; y <= maxY; y++) {
         for (int x = minX; x <= maxX; x++) {
-            if (x < 0 || y < 0 || y >= SCREEN_HEIGHT || x >= SCREEN_WIDTH)
+            // std::cout << "Entered 2nd for loop with x=" << x << std::endl;
+            if (!isInsideScreen(x, y, SCREEN_WIDTH, SCREEN_HEIGHT))
             continue;
 
             glm::vec3 P(x, y, 0);
@@ -111,23 +116,22 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
 
                 // View culling
                 bool inView = glm::dot(camera.viewDirection, normal) <= 0;
-                if (!inView) {
-                    continue;
-                }
+                if (!inView)
+                continue;
                 
                 // Calculate intensity
                 float intensity = glm::dot(normal, glm::normalize(L));
                 intensity = (intensity < 0) ? abs(intensity) : 0.0f;    // Truncate the value for normals facing opposite of L
 
+                // Backface culling
+                if (!inView && intensity <= 0)
+                continue;
+
                 // Interpolate world position
                 glm::vec3 worldPosition = a.position * u + b.position * v + c.position * w;
 
                 // Interpolate original position
-                glm::vec3 originalPosition = a.originalPos * u + b.originalPos * v + c.originalPos * w;
-
-                // Backface culling
-                if (!inView && intensity <= 0)
-                continue;
+                glm::vec3 originalPosition = a.originalPos * u + b.originalPos * v + c.originalPos * w;                
             
 
                 triangleFragments.push_back(
