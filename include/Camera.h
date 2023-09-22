@@ -17,6 +17,11 @@ struct Camera {
         viewDirection = glm::normalize(targetPosition - cameraPosition);
     }
 
+    // Recalculate the camera's viewDirection vector
+    void updateViewDirection() {
+        viewDirection = glm::normalize(targetPosition - cameraPosition);
+    }
+
     // Function to rotate the camera horizontally (left or right)
     void Rotate(float angleRadians) {
         // Rotate the camera around its own up vector
@@ -24,18 +29,19 @@ struct Camera {
         // Update the target position and right vector
         targetPosition = cameraPosition + glm::mat3(rotationMatrix) * (targetPosition - cameraPosition);
         rightVector = glm::normalize(glm::cross(targetPosition - cameraPosition, upVector));
+        updateViewDirection();
     }
 
     // Function to move the camera forward
     void MoveForward(float movementSpeed) {
-        viewDirection = glm::normalize(targetPosition - cameraPosition);
+        updateViewDirection();
         cameraPosition += viewDirection * movementSpeed;
         targetPosition += viewDirection * movementSpeed;
     }
 
     // Function to move the camera backward
     void MoveBackward(float movementSpeed) {
-        viewDirection = glm::normalize(targetPosition - cameraPosition);
+        updateViewDirection();
         cameraPosition -= viewDirection * movementSpeed;
         targetPosition -= viewDirection * movementSpeed;
     }
