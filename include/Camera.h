@@ -46,5 +46,15 @@ struct Camera {
         updateViewDirection();
     }
 
+    void MoveRight(float movementSpeed) {
+        cameraPosition += rightVector * movementSpeed;
+        targetPosition += rightVector * movementSpeed;
+        updateViewDirection();
+    }
+
+    void MoveLeft(float movementSpeed) {
+        cameraPosition -= rightVector * movementSpeed;
+        targetPosition -= rightVector * movementSpeed;
+        updateViewDirection();
     }
 };
