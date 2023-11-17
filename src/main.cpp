@@ -165,7 +165,6 @@ int main() {
         clear();
 
         // Render big planet
-        
         // Calculate matrixes for rendering
         uniforms.model = createModelMatrix(glm::vec3(1.5), glm::vec3(0, 0, 0), rotation += 0.06f);
         uniforms.view = createViewMatrix(camera);
@@ -178,7 +177,6 @@ int main() {
         
         
         // Render small planet
-
         // Orbiting values
         float orbitRadius = 1.5f;
         float xPos = orbitRadius * std::cos(orbitAngle);
@@ -193,13 +191,12 @@ int main() {
         orbitAngle += 0.15f;    // Increase orbit angle
 
 
-
         // Render ship
-
-        glm::vec3 camerOffset = glm::vec3(0, 0.4, -2);
+        glm::vec3 targetOffset = glm::vec3(0, 0.4, 2);
         glm::mat4 shipRotationMatrix = glm::rotate(glm::mat4(1.0f), horizontalRotationSpeed, glm::vec3(0, 1, 0));
-        uniforms.model = createModelMatrix(glm::vec3(0.1), camera.targetPosition + camerOffset, 1.57) * shipRotationMatrix;
+        uniforms.model = createModelMatrix(glm::vec3(0.1), camera.targetPosition - targetOffset, 1.57);
 
+        activeShader = shipFragmentShader;
         render(VBO_ship, camera);
 
         // Present the framebuffer to the screen
