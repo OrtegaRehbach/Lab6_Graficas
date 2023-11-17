@@ -34,15 +34,17 @@ struct Camera {
 
     // Function to move the camera forward
     void MoveForward(float movementSpeed) {
-        updateViewDirection();
         cameraPosition += viewDirection * movementSpeed;
         targetPosition += viewDirection * movementSpeed;
+        updateViewDirection();
     }
 
     // Function to move the camera backward
     void MoveBackward(float movementSpeed) {
-        updateViewDirection();
         cameraPosition -= viewDirection * movementSpeed;
         targetPosition -= viewDirection * movementSpeed;
+        updateViewDirection();
+    }
+
     }
 };
