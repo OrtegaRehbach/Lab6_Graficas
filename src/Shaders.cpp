@@ -49,3 +49,14 @@ Fragment testFragmentShader(const Fragment& fragment) {
     
     return shadedFragment;
 }
+
+Fragment shipFragmentShader(const Fragment& fragment) {
+    glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
+    Color fragmentColor = Color(255, 20, 20);
+
+    float intensity = fragment.intensity;
+
+    Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor * intensity);
+    
+    return shadedFragment;
+}
