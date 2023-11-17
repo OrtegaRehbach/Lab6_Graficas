@@ -114,7 +114,8 @@ std::vector<Fragment> getTriangleFragments(Vertex a, Vertex b, Vertex c, const i
                 glm::vec3 normal = glm::normalize(a.normal * u + b.normal * v + c.normal * w);
 
                 // View culling
-                bool inView = glm::dot(camera.viewDirection, normal) <= 0;
+                float epsilon = 0.2f;
+                bool inView = glm::dot(camera.viewDirection, normal) < epsilon;
                 if (!inView)
                 continue;
                 
