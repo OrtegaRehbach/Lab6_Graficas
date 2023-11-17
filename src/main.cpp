@@ -40,6 +40,12 @@ bool init() {
     return true;
 }
 
+void quit() {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
 void clear() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -124,16 +130,17 @@ int main() {
     float orbitAngle = 0.0f;
 
     // Render loop
-    bool quit = false;
+    bool running = true;
     SDL_Event event;
-    while (!quit) {
+    while (running) {
         frameStart = SDL_GetTicks();
         while (SDL_PollEvent(&event) != 0) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            }
+            if (event.type == SDL_QUIT)
+                running = false;
             // Camera movement
             if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_ESCAPE)
+                    running = false;
                 if (event.key.keysym.sym == SDLK_w) {
                     // "W" key was pressed
                     camera.MoveForward(cameraMovementSpeed);
@@ -212,8 +219,6 @@ int main() {
         }
     }
 
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    return 0;
+    quit();
+    exit(0);
 }
