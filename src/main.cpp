@@ -142,17 +142,24 @@ int main() {
                     // "S" key was pressed
                     camera.MoveBackward(cameraMovementSpeed);
                 }
+                else if (event.key.keysym.sym == SDLK_d) {
+                    // "D" key was pressed
+                    camera.MoveRight(cameraMovementSpeed);
+                }
                 else if (event.key.keysym.sym == SDLK_a) {
+                    // "A" key was pressed
+                    camera.MoveLeft(cameraMovementSpeed);
+                }
+                else if (event.key.keysym.sym == SDLK_q) {
                     // Rotate the camera left (orbit)
                     camera.Rotate(horizontalRotationSpeed);
                 }
-                else if (event.key.keysym.sym == SDLK_d) {
+                else if (event.key.keysym.sym == SDLK_e) {
                     // Rotate the camera right (orbit)
                     camera.Rotate(-horizontalRotationSpeed);
                 }
             }
-        }
-        
+        }        
 
         // Clear the buffer
         clear();
