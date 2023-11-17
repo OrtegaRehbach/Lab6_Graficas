@@ -7,6 +7,6 @@
 #include "Vertex.h"
 
 Vertex vertexShader(const Vertex& vertex, const Uniforms& uniforms);
-Vertex vertexShader(const Vertex& vertex);
 Fragment fragmentShader(const Fragment& fragment);
 Fragment testFragmentShader(const Fragment& fragment);
+Fragment shipFragmentShader(const Fragment& fragment);
