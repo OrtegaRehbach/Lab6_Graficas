@@ -24,7 +24,7 @@ Uniforms uniforms;
 // Define the type of function to store in activeShader
 using ShaderFunction = std::function<Fragment(const Fragment& fragment)>;
 
-// Global variable to store active shader
+// Global variable to store active fragment shader function
 ShaderFunction activeShader;
 
 
@@ -135,11 +135,11 @@ int main() {
             // Camera movement
             if (event.type == SDL_KEYDOWN) {
                 if (event.key.keysym.sym == SDLK_w) {
-                    // "S" key was pressed
+                    // "W" key was pressed
                     camera.MoveForward(cameraMovementSpeed);
                 }
                 else if (event.key.keysym.sym == SDLK_s) {
-                    // "W" key was pressed
+                    // "S" key was pressed
                     camera.MoveBackward(cameraMovementSpeed);
                 }
                 else if (event.key.keysym.sym == SDLK_a) {
