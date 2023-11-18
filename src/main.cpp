@@ -4,6 +4,8 @@
 #include <array>
 #include <sstream>
 #include <functional>
+
+#include "globals.h"
 #include "ObjLoader.h"
 #include "Vertex.h"
 #include "Face.h"
@@ -11,14 +13,11 @@
 #include "RenderingUtils.h"
 #include "Shaders.h"
 
-
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
 std::array<std::array<float, SCREEN_WIDTH>, SCREEN_HEIGHT> zbuffer;
 
-SDL_Window* window = nullptr;
-SDL_Renderer* renderer = nullptr;
 Uniforms uniforms;
 
 // Define the type of function to store in activeShader
