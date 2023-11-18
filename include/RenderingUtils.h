@@ -9,6 +9,7 @@
 #include "Face.h"
 #include "Fragment.h"
 #include "Camera.h"
+#include "globals.h"
 
 // Render to window
 void drawPoint(SDL_Renderer* renderer, float x_position, float y_position, const Color& color = Color(255, 255, 255));

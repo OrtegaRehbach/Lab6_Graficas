@@ -4,14 +4,9 @@
 // glm::vec3 L(0.5f, -1.0f, 1.0f);  // Diagonal light
 glm::vec3 L(1.0f, 0.0f, 1.0f);  // Horizontal light (right)
 
-void drawPoint(SDL_Renderer* renderer, float x_position, float y_position, const Color& color) {
-    // Get Screen dimensions for coordinate adjustment
-    int SCREEN_WIDTH;
-    int SCREEN_HEIGHT;
-    SDL_GetRendererOutputSize(renderer, &SCREEN_WIDTH, &SCREEN_HEIGHT);
-    
+void drawPoint(SDL_Renderer* renderer, float x_position, float y_position, const Color& color) {    
     SDL_SetRenderDrawColor(renderer, color.red, color.green, color.blue, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawPoint(renderer, static_cast<int>(x_position), SCREEN_HEIGHT - static_cast<int>(y_position));
+    SDL_RenderDrawPoint(renderer, static_cast<int>(x_position), *globalScreenHeight - static_cast<int>(y_position));
 }
 
 std::vector<Fragment> drawLine(const glm::vec3& start, const glm::vec3& end, const Color& color) {

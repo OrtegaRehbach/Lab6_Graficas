@@ -17,6 +17,10 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
 std::array<std::array<float, SCREEN_WIDTH>, SCREEN_HEIGHT> zbuffer;
+SDL_Window* window;
+SDL_Renderer* renderer;
+const int* globalScreenHeight;
+const int* globalScreenWidth;
 
 Uniforms uniforms;
 
@@ -35,6 +39,8 @@ bool init() {
 
     window = SDL_CreateWindow("Render Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    globalScreenHeight = &SCREEN_HEIGHT;
+    globalScreenWidth = &SCREEN_HEIGHT;
 
     return true;
 }
