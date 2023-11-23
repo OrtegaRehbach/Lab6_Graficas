@@ -5,8 +5,11 @@
 #include "Color.h"
 #include "Fragment.h"
 #include "Vertex.h"
+#include "FastNoiseLite.h"
 
 Vertex vertexShader(const Vertex& vertex, const Uniforms& uniforms);
-Fragment fragmentShader(const Fragment& fragment);
+Fragment stripedPlanetFragmentShader(const Fragment& fragment);
+Fragment earthPlanetFragmentShader(const Fragment& fragment);
+Fragment starFragmentShader(const Fragment& fragment);
 Fragment testFragmentShader(const Fragment& fragment);
 Fragment shipFragmentShader(const Fragment& fragment);
