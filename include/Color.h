@@ -47,10 +47,10 @@ struct Color {
     }
 
     Color operator*(float scalar) const {
-        Uint8 r = static_cast<Uint8>(red * scalar);
-        Uint8 g = static_cast<Uint8>(green * scalar);
-        Uint8 b = static_cast<Uint8>(blue * scalar);
-        Uint8 a = static_cast<Uint8>(alpha * scalar);
+        Uint8 r = static_cast<Uint8>(std::max(0.0f, std::min(red * scalar, 255.0f)));
+        Uint8 g = static_cast<Uint8>(std::max(0.0f, std::min(green * scalar, 255.0f)));
+        Uint8 b = static_cast<Uint8>(std::max(0.0f, std::min(blue * scalar, 255.0f)));
+        Uint8 a = 255;
         return Color(r, g, b, a);
     }
 
