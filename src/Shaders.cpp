@@ -41,6 +41,7 @@ Fragment stripedPlanetFragmentShader(const Fragment& fragment) {
 
 Fragment earthPlanetFragmentShader(const Fragment& fragment) {
     glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
+    float intensity = fragment.intensity;
     FastNoiseLite noise;
     noise.SetSeed(123);  // Set a seed for reproducibility
     noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
@@ -85,7 +86,7 @@ Fragment earthPlanetFragmentShader(const Fragment& fragment) {
     fragmentColor = fragmentColor * (1.0f + 0.5f * noiseValue);
 
     // Apply intensity based on elevation for some 3D effect
-    float intensity = 1.0f - elevation * 0.1f;
+    intensity *= 1.0f - elevation * 0.1f;
     fragmentColor = fragmentColor * intensity;
 
     Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor);
@@ -95,6 +96,7 @@ Fragment earthPlanetFragmentShader(const Fragment& fragment) {
 
 Fragment moonFragmentShader(const Fragment& fragment) {
     glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
+    float intensity = fragment.intensity;
     FastNoiseLite noise;
     noise.SetSeed(456);  // Set a different seed for variety
     noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
@@ -124,7 +126,7 @@ Fragment moonFragmentShader(const Fragment& fragment) {
     fragmentColor = fragmentColor * (1.0f + 0.2f * noiseValue);
 
     // Apply intensity to the crater color
-    float intensity = 1.0f - craterFormation * 0.1f;
+    intensity *= 1.0f - craterFormation * 0.1f;
     fragmentColor = fragmentColor * intensity;
 
     Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor);
