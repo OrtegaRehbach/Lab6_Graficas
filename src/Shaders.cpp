@@ -70,6 +70,16 @@ Fragment earthPlanetFragmentShader(const Fragment& fragment) {
         fragmentColor = Color(0, 0, 128);
     }
 
+    float cloudScale = 550.0f;
+    float cloudCoverage = noise.GetNoise(fragment.originalPosition.x * cloudScale + fragment.x, fragment.originalPosition.y * cloudScale + fragment.y, fragment.originalPosition.z * cloudScale + fragment.z);
+    cloudCoverage += 1.0f;
+    cloudCoverage *= 0.5f;
+
+    float cloudThreshold = 0.7f;
+    if (cloudCoverage > cloudThreshold) {
+        fragmentColor = fragmentColor +  Color(220, 220, 220) * cloudCoverage;
+    }
+
     // Apply variations based on noise for a more natural look
     float noiseValue = noise.GetNoise(fragment.originalPosition.x * 400.0f, fragment.originalPosition.y * 400.0f, fragment.originalPosition.z * 400.0f);
     fragmentColor = fragmentColor * (1.0f + 0.5f * noiseValue);
@@ -82,6 +92,46 @@ Fragment earthPlanetFragmentShader(const Fragment& fragment) {
     
     return shadedFragment;
 }
+
+Fragment moonFragmentShader(const Fragment& fragment) {
+    glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
+    FastNoiseLite noise;
+    noise.SetSeed(456);  // Set a different seed for variety
+    noise.SetNoiseType(FastNoiseLite::NoiseType_Perlin);
+
+    // Scale determines the level of detail in the noise
+    float scale = 900.0f;
+
+    // Use Perlin noise to generate crater formations
+    float craterFormation = noise.GetNoise(fragment.originalPosition.x * scale, fragment.originalPosition.y * scale, fragment.originalPosition.z * scale);
+    craterFormation = (craterFormation + 1.0f) * 0.5f;
+
+    // Threshold for craters
+    float craterThreshold = 0.8f;
+
+    // Determine if the fragment is part of a crater or not
+    Color fragmentColor;
+    if (craterFormation > craterThreshold) {
+        // Crater color (dark gray)
+        fragmentColor = Color(50, 50, 50);
+    } else {
+        // Moon surface color (light gray)
+        fragmentColor = Color(180, 180, 180);
+    }
+
+    // Apply variations based on noise for a more natural look
+    float noiseValue = noise.GetNoise(fragment.originalPosition.x * 300.0f, fragment.originalPosition.y * 300.0f, fragment.originalPosition.z * 300.0f);
+    fragmentColor = fragmentColor * (1.0f + 0.2f * noiseValue);
+
+    // Apply intensity to the crater color
+    float intensity = 1.0f - craterFormation * 0.1f;
+    fragmentColor = fragmentColor * intensity;
+
+    Fragment shadedFragment = Fragment(fragmentPosition, fragmentColor);
+
+    return shadedFragment;
+}
+
 
 Fragment starFragmentShader(const Fragment& fragment) {
     glm::vec3 fragmentPosition(fragment.x, fragment.y, fragment.z);
