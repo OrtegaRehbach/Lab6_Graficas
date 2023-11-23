@@ -131,6 +131,7 @@ int main() {
     std::vector<glm::vec3> VBO_ship = setupVertexBufferObject(shipVertices, shipNormals, shipFaces);
 
     float rotation = 0.0f;
+    float moonRotation = 0.0f;
     Uint32 frameStart, frameTime;
     float orbitAngle = 0.0f;
 
@@ -184,7 +185,7 @@ int main() {
         uniforms.viewport = createViewportMatrix(SCREEN_WIDTH, SCREEN_HEIGHT);
 
         // Call render() function
-        activeShader = fragmentShader;  // Set active shader to striped planet shader
+        activeShader = earthPlanetFragmentShader;  // Set active shader to striped planet shader
         render(VBO, camera);    // Big planet
         
         
@@ -195,21 +196,21 @@ int main() {
         float zPos = orbitRadius * std::sin(orbitAngle);
 
         // New model matrix for small planet
-        uniforms.model = createModelMatrix(glm::vec3(0.4), glm::vec3(xPos, 0, zPos));
+        uniforms.model = createModelMatrix(glm::vec3(0.4), glm::vec3(xPos, 0, zPos), moonRotation -= 0.4f);
 
-        activeShader = testFragmentShader;  // Set active shader to test fragment shader
+        activeShader = moonFragmentShader;  // Set active shader to test fragment shader
         render(VBO, camera);    // Small orbiting planet
 
         orbitAngle += 0.15f;    // Increase orbit angle
 
 
         // Render ship
-        glm::vec3 targetOffset = glm::vec3(0, 0.4, 2);
-        glm::mat4 shipRotationMatrix = glm::rotate(glm::mat4(1.0f), horizontalRotationSpeed, glm::vec3(0, 1, 0));
-        uniforms.model = createModelMatrix(glm::vec3(0.1), camera.targetPosition - targetOffset, 1.57);
+        // glm::vec3 targetOffset = glm::vec3(0, 0.4, 2);
+        // glm::mat4 shipRotationMatrix = glm::rotate(glm::mat4(1.0f), horizontalRotationSpeed, glm::vec3(0, 1, 0));
+        // uniforms.model = createModelMatrix(glm::vec3(0.1), camera.targetPosition - targetOffset, 1.57);
 
-        activeShader = shipFragmentShader;
-        render(VBO_ship, camera);
+        // activeShader = shipFragmentShader;
+        // render(VBO_ship, camera);
 
         // Present the framebuffer to the screen
         SDL_RenderPresent(renderer);
